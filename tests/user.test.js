@@ -10,8 +10,6 @@ import express from 'express';
 import userRoutes from '../src/routes/user.route.js';
 import db from '../src/database/configdb.js';
 
-jest.setTimeout(15000);
-
 const app = express();
 app.use(express.json());
 app.use('/users', userRoutes);
@@ -33,24 +31,27 @@ beforeAll(async () => {
   await client.close();
 
   await db.connect();
-});
+}, 15000);
 
 afterAll(async () => {
   await mongoose.connection.close();
 });
 
 describe('User Endpoints', () => {
-  it('deve registrar um novo usuário', async () => {
-    const res = await request(app)
-      .post('/users/register')
-      .send({
-        name: 'Teste',
-        email: `teste${Date.now()}@mail.com`,
-        password: '123456'
-      });
-    console.log(res.body);
-    expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty('user');
-    expect(res.body.user).toHaveProperty('email');
-  });
+  it(
+    'deve registrar um novo usuário',
+    async () => {
+      const res = await request(app)
+        .post('/users/register')
+        .send({
+          name: 'Teste',
+          email: `teste${Date.now()}@mail.com`,
+          password: '123456'
+        });
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toHaveProperty('user');
+      expect(res.body.user).toHaveProperty('email');
+    },
+    15000 // <-- timeout aqui
+  );
 });
