@@ -2,13 +2,14 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-export const registerUser = async (name, email, password) => {
+export const registerUser = async (name, email, password, role = 'visitante') => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const savedUser = await User.create({ 
         name, 
         email, 
-        password: hashedPassword 
+        password: hashedPassword,
+        role 
     });
     return savedUser;
 };
