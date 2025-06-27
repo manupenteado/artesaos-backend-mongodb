@@ -3,7 +3,7 @@ import User from '../models/User.js';
 
 const createProduct = async (req, res) => {
   try {
-    const { name, price, description, artisanId } = req.body;
+    const { name, price, description, category, artisanId } = req.body;
     
     // Verificar se o artesão existe e tem o role correto
     const artisan = await User.findById(artisanId);
@@ -19,6 +19,7 @@ const createProduct = async (req, res) => {
       name,
       price,
       description,
+      category,
       artisan: artisanId
     });
     
